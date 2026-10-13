@@ -1,4 +1,6 @@
 {$DOMINIO} {
 	encode gzip
+	# La dirección principal lleva directo a la pantalla de acceso.
+	redir / /admin/ 302
 	reverse_proxy app:9000
 }
