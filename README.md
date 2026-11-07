@@ -14,6 +14,10 @@ respaldo.sh  ◀── volcado diario                                     ▼
                               ◀── aperturas, clics y bajas ── destinatarios
 ```
 
+La dirección `https://envios.mktbs.pe` lleva directo a la pantalla de acceso del panel
+(usuario y contraseña; cada usuario ve lo que su rol le permite). Lo único público son
+la página de baja y «ver en el navegador», a las que se llega desde el correo.
+
 El servidor tiene que estar en internet las 24 horas: ahí caen las aperturas, los
 clics y las bajas. El hosting compartido de Hostinger no corre listmonk; por eso un
 VPS chico. Todo lo demás corre en el Mac mini.
