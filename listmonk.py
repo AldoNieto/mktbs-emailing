@@ -18,7 +18,7 @@ panel, después del envío de prueba.
 
 Credenciales (el entorno gana sobre el archivo):
     ~/.config/haiku/listmonk.env
-        LISTMONK_URL=https://envios.mktbs.pe
+        LISTMONK_URL=https://correo.mktbs.pe
         LISTMONK_USER=motor            (usuario API creado en Ajustes → Usuarios)
         LISTMONK_TOKEN=xxxxxxxx
 
