@@ -9,18 +9,35 @@ y `contenido/segmentos.py`).
 Mac mini                     servidor público (VPS)            Amazon SES
 segmentos.py → listas ──API──▶ listmonk + PostgreSQL ──SMTP──▶ entrega
 campana.py   → borradores      panel, píxel, clics, bajas ◀── rebotes y quejas (SNS)
-listmonk.py  → retarget          envios.mktbs.pe                    │
+listmonk.py  → retarget          correo.mktbs.pe                    │
 respaldo.sh  ◀── volcado diario                                     ▼
                               ◀── aperturas, clics y bajas ── destinatarios
 ```
 
-La dirección `https://envios.mktbs.pe` lleva directo a la pantalla de acceso del panel
+La dirección `https://correo.mktbs.pe` lleva directo a la pantalla de acceso del panel
 (usuario y contraseña; cada usuario ve lo que su rol le permite). Lo único público son
 la página de baja y «ver en el navegador», a las que se llega desde el correo.
 
 El servidor tiene que estar en internet las 24 horas: ahí caen las aperturas, los
 clics y las bajas. El hosting compartido de Hostinger no corre listmonk; por eso un
 VPS chico. Todo lo demás corre en el Mac mini.
+
+## Producción (desde el 22-oct-2026)
+
+| Pieza | Qué corre |
+|---|---|
+| Servidor | VPS KVM 2 de Hostinger `srv2087545`, IP 2.25.96.12, compartido con el CRM |
+| Aplicación | Plantilla «Listmonk» del Docker manager: proyecto `listmonk-ome7` con listmonk v6.0.0 y PostgreSQL 18 |
+| HTTPS | Proyecto `traefik` (Let's Encrypt), compartido con `crm.mktbs.pe` |
+| Panel | `https://correo.mktbs.pe` |
+| Envío | Amazon SES, us-east-1 |
+| Dominio de envío | `boletin.mktbs.pe` (DKIM, MAIL FROM `rebotes.boletin.mktbs.pe`) |
+| Remitente | `MKT BS <noticias@boletin.mktbs.pe>` |
+| Resultados al CRM | `crm-ferias/scripts/listmonk-sync.sh` copia campañas, aperturas y clics |
+
+El detalle de la configuración aplicada está en `mktbs-direccion`, `plataforma/comunidad/emailing/README.md`.
+La carpeta `servidor/` y la «Puesta en marcha» de abajo son la receta original (listmonk v4.1.0 con Caddy en
+`envios.mktbs.pe`): sirven de referencia para montar otra instancia, no describen la que corre.
 
 ```
 servidor/docker-compose.yml   listmonk v4.1.0 + PostgreSQL 16 + Caddy (HTTPS automático)
@@ -31,7 +48,7 @@ listmonk.py                   conector: listas, campañas, retargeting, exportar
 SES-SOLICITUD.md              texto para pedir a Amazon la salida del modo de prueba
 ```
 
-## Puesta en marcha (una vez)
+## Puesta en marcha original (receta con Caddy, no es la de producción)
 
 1. **DNS en Hostinger (mktbs.pe).** No tocar el SPF ni el DMARC de `mktbs.pe`: son del
    correo de Zoho. Todo va en el subdominio `envios.mktbs.pe`:
@@ -72,7 +89,7 @@ SES-SOLICITUD.md              texto para pedir a Amazon la salida del modo de pr
 
 5. **Mac mini.** `~/.config/haiku/listmonk.env` (nunca en el repo):
    ```
-   LISTMONK_URL=https://envios.mktbs.pe
+   LISTMONK_URL=https://correo.mktbs.pe
    LISTMONK_USER=motor
    LISTMONK_TOKEN=…
    ```
@@ -122,5 +139,5 @@ SES revisa la cuenta con rebotes sobre 5 % o quejas sobre 0,1 %.
 ## Pruebas
 
 `python3 -m unittest discover tests` prueba las transformaciones sin red. El
-conector completo se probó contra listmonk v4.1.0 en Docker (listas, importación,
+conector completo se probó contra listmonk v4.1.0 en Docker (producción corre v6.0.0) (listas, importación,
 borradores con enlaces medidos, píxel y baja, retarget y exportación).

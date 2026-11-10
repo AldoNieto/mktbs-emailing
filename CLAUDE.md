@@ -12,13 +12,16 @@ https://claude.ai/code/artifact/3ea1bdd6-e0f3-4557-a566-2d7766c73bba
    nunca en el repo ni en el chat.
 3. **Datos personales** (CSV de listas, exportaciones) viven en el Mac mini, nunca en el repo.
 4. **No tocar el SPF ni el DMARC de `mktbs.pe`** (son del correo de Zoho); el envío usa el
-   subdominio `envios.mktbs.pe`.
+   subdominio `boletin.mktbs.pe`.
 5. **Baja en cada correo y supresión permanente** (Ley 29733).
-6. **Firma** de todo documento: Aldo Nieto Bromley, Productor General. Acuerdos legales:
-   Carlos Nieto Bromley, Gerente General (detenerse y preguntar).
+6. **Firma** de todo documento: Dirección de Marketing y Gestión Comercial, sin nombre de
+   persona (regla de Aldo del 9-oct-2026). Acuerdos legales: Carlos Nieto Bromley, Gerente
+   General (detenerse y preguntar).
 
 ## Dónde corre
-- VPS público: listmonk, PostgreSQL, Caddy (`servidor/`).
+- VPS público (Hostinger, 2.25.96.12): listmonk v6.0.0 y PostgreSQL 18 en el proyecto `listmonk-ome7`
+  del Docker manager, detrás de Traefik, en `https://correo.mktbs.pe`. `servidor/` es la receta
+  original (v4.1.0 con Caddy) y no es lo que corre; ver «Producción» en `README.md`.
 - Mac mini (siempre encendido, vía Remote Control): genera campañas con haiku-web-engine,
   corre `listmonk.py` y el respaldo diario.
 
